@@ -28,7 +28,6 @@ source="$url/download/tengine-$pkgver.tar.gz
         initd
         logrotate"
 
-build(){
 build() {
     cd tengine-$pkgver
 
@@ -104,6 +103,7 @@ package() {
     install -d "$pkgdir"/usr/share/man/man8/
     gzip -9c man/nginx.8 > "$pkgdir"/usr/share/man/man8/nginx.8.gz
 }
+
 md5sums="8c891d51d5a066bca0d03c184c4287a7  tengine-2.0.3.tar.gz
 d8e1da4179de6dad5d9b92463b37e9d3  initd
 5fb3f3c64c8de4c6ec852a45fdabfb6f  logrotate"
