@@ -1,0 +1,115 @@
+# Maintainer: Allen Zhong <moeallenz@gmail.com>
+# Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Sébastien Luttringer
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Miroslaw Szot <mss@czlug.icis.pcz.pl>
+
+pkgname=tengine
+pkgver=2.0.3
+pkgrel=1
+pkgdesc='A web server based on Nginx and has many advanced features, originated by Taobao. Some extra modules enabled.'
+arch="x86 x86_64"
+url="http://tengine.taobao.org"
+license="custom"
+depends="pcre zlib openssl gperf"
+makedepends="geoip"
+backup="etc/tengine/fastcgi.conf
+        etc/tengine/fastcgi_params
+        etc/tengine/koi-win
+        etc/tengine/koi-utf
+        etc/tengine/mime.types
+        etc/tengine/tengine.conf
+        etc/tengine/scgi_params
+        etc/tengine/uwsgi_params
+        etc/tengine/win-utf
+        etc/logrotate.d/tengine"
+install=tengine.install
+source="$url/download/tengine-$pkgver.tar.gz
+        initd
+        logrotate"
+
+build(){
+build() {
+    cd tengine-$pkgver
+
+    ./configure \
+      --prefix=/etc/tengine \
+      --conf-path=/etc/tengine/tengine.conf \
+      --sbin-path=/usr/bin/tengine \
+      --dso-path=/etc/tengine/modules \
+      --dso-tool-path=/sbin/dso_tool \
+      --pid-path=/run/tengine.pid \
+      --lock-path=/run/lock/tengine.lock \
+      --user=http \
+      --group=http \
+      --http-log-path=/var/log/tengine/access.log \
+      --error-log-path=stderr \
+      --http-client-body-temp-path=/var/lib/tengine/client-body \
+      --http-proxy-temp-path=/var/lib/tengine/proxy \
+      --http-fastcgi-temp-path=/var/lib/tengine/fastcgi \
+      --http-scgi-temp-path=/var/lib/tengine/scgi \
+      --http-uwsgi-temp-path=/var/lib/tengine/uwsgi \
+      --with-imap \
+      --with-imap_ssl_module \
+      --with-ipv6 \
+      --with-pcre-jit \
+      --with-file-aio \
+      --with-google_perftools_module \
+      --with-http_dav_module \
+      --with-http_geoip_module=shared \
+      --with-http_gunzip_module \
+      --with-http_gzip_static_module \
+      --with-http_memcached_module=shared \
+      --with-http_realip_module \
+      --with-http_secure_link_module=shared \
+      --with-http_spdy_module \
+      --with-http_ssl_module \
+      --with-http_stub_status_module \
+      --with-http_addition_module \
+      --with-http_degradation_module \
+      --with-http_flv_module=shared \
+      --with-http_mp4_module=shared\
+      --with-http_secure_link_module \
+      --with-http_sub_module=shared \
+      --with-http_sysguard_module=shared
+
+    make
+}
+
+package() {
+    cd tengine-$pkgver
+    make DESTDIR="$pkgdir" install
+    make DESTDIR="$pkgdir" dso_install
+
+    sed -e 's|\<user\s\+\w\+;|user html;|g' \
+        -e '44s|html|/usr/share/tengine/html|' \
+        -e '54s|html|/usr/share/tengine/html|' \
+        -i "$pkgdir"/etc/tengine/tengine.conf
+    rm "$pkgdir"/etc/tengine/*.default
+
+    install -d "$pkgdir"/var/lib/tengine
+    install -dm700 "$pkgdir"/var/lib/tengine/proxy
+
+    chmod 750 "$pkgdir"/var/log/tengine
+    chown http:log "$pkgdir"/var/log/tengine
+
+    install -d "$pkgdir"/usr/share/tengine
+    mv "$pkgdir"/etc/tengine/html/ "$pkgdir"/usr/share/tengine
+
+    install -D -m755 "$srcdir"/initd "$pkgdir"/etc/init.d/tengine
+    install -Dm644 "$srcdir"/logrotate "$pkgdir"/etc/logrotate.d/tengine
+    install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/tengine/LICENSE
+    rmdir "$pkgdir"/run
+
+    install -d "$pkgdir"/usr/share/man/man8/
+    gzip -9c man/nginx.8 > "$pkgdir"/usr/share/man/man8/nginx.8.gz
+}
+md5sums="8c891d51d5a066bca0d03c184c4287a7  tengine-2.0.3.tar.gz
+d8e1da4179de6dad5d9b92463b37e9d3  initd
+5fb3f3c64c8de4c6ec852a45fdabfb6f  logrotate"
+sha256sums="ed024b6040e8f03df575fe7d7a9d274159e2543cd6854d89e173935e930fdfdb  tengine-2.0.3.tar.gz
+405ecde1afb19b31b58979f6d998350b69f9b2d290017fbeb34829c98cf5c455  initd
+245c23906db2a9642fed996ff969e127989a6dcae865c1dd8b422e23ebc94f42  logrotate"
+sha512sums="34f03452bccd050a8680e3b21ae5e07ee16c477b68733318dc9026d67aac61783a32635ad036bb91b059951fdcfcccfe56374b650e3006700c67b299853e87a5  tengine-2.0.3.tar.gz
+b5904d6a9db2c764ebdb10e53021c2b9596812b9ab4d2732d5fb45741c55f1b3b80418b82f4aa49765875d2a1c4ebf77dc3bdc7416ce1bcb444de8812101a30b  initd
+034a1aed91fe2211261de620c9a1460ee58280c25aa90e2536a34205ccd373275efebeba9080502daca7524be218ce08760f4a827e989a98651726dd0835e311  logrotate"
