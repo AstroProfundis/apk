@@ -12,7 +12,7 @@ arch="x86 x86_64"
 url="http://tengine.taobao.org"
 license="custom"
 depends="pcre zlib openssl geoip"
-makedepends="geoip-dev pcre-dev openssl-dev"
+makedepends="geoip-dev pcre-dev openssl-dev zlib-dev"
 install="$pkgname.pre-install $pkgname.pre-upgrade"
 backup="etc/tengine/fastcgi.conf
         etc/tengine/fastcgi_params
@@ -25,11 +25,12 @@ backup="etc/tengine/fastcgi.conf
         etc/tengine/win-utf
         etc/logrotate.d/tengine"
 source="$url/download/tengine-$pkgver.tar.gz
+	musl-crypt-fix.patch
         initd
         logrotate"
 
 prepare() {
-    cd "$_builddir"
+    cd $srcdir/tengine-$pkgver
     for i in $source; do
         case $i in
         *.patch) msg $i; patch -p1 -i "$srcdir"/$i || return 1;;
@@ -38,7 +39,7 @@ prepare() {
 }
 
 build() {
-    cd tengine-$pkgver
+    cd $srcdir/tengine-$pkgver
 
     ./configure \
       --prefix=/etc/tengine \
@@ -85,7 +86,7 @@ build() {
 }
 
 package() {
-    cd tengine-$pkgver
+    cd $srcdir/tengine-$pkgver
     make DESTDIR="$pkgdir" install
     make DESTDIR="$pkgdir" dso_install
 
@@ -114,11 +115,14 @@ package() {
 }
 
 md5sums="8c891d51d5a066bca0d03c184c4287a7  tengine-2.0.3.tar.gz
+923b8190b3925e4114f398309458fba0  musl-crypt-fix.patch
 d8e1da4179de6dad5d9b92463b37e9d3  initd
 5fb3f3c64c8de4c6ec852a45fdabfb6f  logrotate"
 sha256sums="ed024b6040e8f03df575fe7d7a9d274159e2543cd6854d89e173935e930fdfdb  tengine-2.0.3.tar.gz
+72d9024f698d7a2ff189525b01499b1db201a34907e2c7f081b307c8f13b328a  musl-crypt-fix.patch
 405ecde1afb19b31b58979f6d998350b69f9b2d290017fbeb34829c98cf5c455  initd
 245c23906db2a9642fed996ff969e127989a6dcae865c1dd8b422e23ebc94f42  logrotate"
 sha512sums="34f03452bccd050a8680e3b21ae5e07ee16c477b68733318dc9026d67aac61783a32635ad036bb91b059951fdcfcccfe56374b650e3006700c67b299853e87a5  tengine-2.0.3.tar.gz
+1f7364ef532a9587aab72be2225a535519ddd936ae6fbb9953994076266c90ee2de6b3b8f187f41032a695a1a91fc2c4736b17a63c0c970a5dabc4d206000194  musl-crypt-fix.patch
 b5904d6a9db2c764ebdb10e53021c2b9596812b9ab4d2732d5fb45741c55f1b3b80418b82f4aa49765875d2a1c4ebf77dc3bdc7416ce1bcb444de8812101a30b  initd
 034a1aed91fe2211261de620c9a1460ee58280c25aa90e2536a34205ccd373275efebeba9080502daca7524be218ce08760f4a827e989a98651726dd0835e311  logrotate"
