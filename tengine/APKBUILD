@@ -11,8 +11,9 @@ pkgdesc='A web server based on Nginx and has many advanced features, originated 
 arch="x86 x86_64"
 url="http://tengine.taobao.org"
 license="custom"
-depends="pcre zlib openssl gperf"
-makedepends="geoip"
+depends="pcre zlib openssl geoip"
+makedepends="geoip-dev pcre-dev openssl-dev"
+install="$pkgname.pre-install $pkgname.pre-upgrade"
 backup="etc/tengine/fastcgi.conf
         etc/tengine/fastcgi_params
         etc/tengine/koi-win
@@ -23,10 +24,18 @@ backup="etc/tengine/fastcgi.conf
         etc/tengine/uwsgi_params
         etc/tengine/win-utf
         etc/logrotate.d/tengine"
-install=tengine.install
 source="$url/download/tengine-$pkgver.tar.gz
         initd
         logrotate"
+
+prepare() {
+    cd "$_builddir"
+    for i in $source; do
+        case $i in
+        *.patch) msg $i; patch -p1 -i "$srcdir"/$i || return 1;;
+        esac
+    done
+}
 
 build() {
     cd tengine-$pkgver
@@ -53,7 +62,6 @@ build() {
       --with-ipv6 \
       --with-pcre-jit \
       --with-file-aio \
-      --with-google_perftools_module \
       --with-http_dav_module \
       --with-http_geoip_module=shared \
       --with-http_gunzip_module \
@@ -70,9 +78,10 @@ build() {
       --with-http_mp4_module=shared\
       --with-http_secure_link_module \
       --with-http_sub_module=shared \
-      --with-http_sysguard_module=shared
+      --with-http_sysguard_module=shared \
+      || return 1
 
-    make
+    make || return 1
 }
 
 package() {
