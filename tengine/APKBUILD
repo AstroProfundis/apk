@@ -94,6 +94,7 @@ package() {
 
     install -d "$pkgdir"/var/lib/tengine
     install -dm700 "$pkgdir"/var/lib/tengine/proxy
+    install -d "$pkgdir"/var/www
 
     chmod 750 "$pkgdir"/var/log/tengine
     chown http:log "$pkgdir"/var/log/tengine
