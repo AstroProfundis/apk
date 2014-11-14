@@ -6,11 +6,11 @@
 
 pkgname=tengine
 pkgver=2.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc='A web server based on Nginx and has many advanced features, originated by Taobao. Some extra modules enabled.'
 arch="x86 x86_64"
 url="http://tengine.taobao.org"
-license="custom"
+license="Custom"
 depends="pcre zlib openssl geoip"
 makedepends="geoip-dev pcre-dev openssl-dev zlib-dev"
 install="$pkgname.pre-install $pkgname.pre-upgrade"
@@ -44,15 +44,15 @@ build() {
     ./configure \
       --prefix=/etc/tengine \
       --conf-path=/etc/tengine/tengine.conf \
-      --sbin-path=/usr/bin/tengine \
+      --sbin-path=/usr/sbin/tengine \
       --dso-path=/etc/tengine/modules \
-      --dso-tool-path=/sbin/dso_tool \
-      --pid-path=/run/tengine.pid \
-      --lock-path=/run/lock/tengine.lock \
-      --user=http \
-      --group=http \
+      --dso-tool-path=/usr/sbin/dso_tool \
+      --pid-path=/var/run/tengine.pid \
+      --lock-path=/var/run/lock/tengine.lock \
+      --user=tengine \
+      --group=www-data \
       --http-log-path=/var/log/tengine/access.log \
-      --error-log-path=stderr \
+      --error-log-path=/var/log/tengine/error.log \
       --http-client-body-temp-path=/var/lib/tengine/client-body \
       --http-proxy-temp-path=/var/lib/tengine/proxy \
       --http-fastcgi-temp-path=/var/lib/tengine/fastcgi \
@@ -90,10 +90,6 @@ package() {
     make DESTDIR="$pkgdir" install
     make DESTDIR="$pkgdir" dso_install
 
-    sed -e 's|\<user\s\+\w\+;|user html;|g' \
-        -e '44s|html|/usr/share/tengine/html|' \
-        -e '54s|html|/usr/share/tengine/html|' \
-        -i "$pkgdir"/etc/tengine/tengine.conf
     rm "$pkgdir"/etc/tengine/*.default
 
     install -d "$pkgdir"/var/lib/tengine
@@ -101,9 +97,6 @@ package() {
 
     chmod 750 "$pkgdir"/var/log/tengine
     chown http:log "$pkgdir"/var/log/tengine
-
-    install -d "$pkgdir"/usr/share/tengine
-    mv "$pkgdir"/etc/tengine/html/ "$pkgdir"/usr/share/tengine
 
     install -D -m755 "$srcdir"/initd "$pkgdir"/etc/init.d/tengine
     install -Dm644 "$srcdir"/logrotate "$pkgdir"/etc/logrotate.d/tengine
@@ -116,13 +109,13 @@ package() {
 
 md5sums="8c891d51d5a066bca0d03c184c4287a7  tengine-2.0.3.tar.gz
 923b8190b3925e4114f398309458fba0  musl-crypt-fix.patch
-d8e1da4179de6dad5d9b92463b37e9d3  initd
+d708eaa96079867410e49d511713061c  initd
 5fb3f3c64c8de4c6ec852a45fdabfb6f  logrotate"
 sha256sums="ed024b6040e8f03df575fe7d7a9d274159e2543cd6854d89e173935e930fdfdb  tengine-2.0.3.tar.gz
 72d9024f698d7a2ff189525b01499b1db201a34907e2c7f081b307c8f13b328a  musl-crypt-fix.patch
-405ecde1afb19b31b58979f6d998350b69f9b2d290017fbeb34829c98cf5c455  initd
+45594f1b0b4b77d75622434e8b0af783bb4ddbb644d2ab3b6f6bbd298ffe89d8  initd
 245c23906db2a9642fed996ff969e127989a6dcae865c1dd8b422e23ebc94f42  logrotate"
 sha512sums="34f03452bccd050a8680e3b21ae5e07ee16c477b68733318dc9026d67aac61783a32635ad036bb91b059951fdcfcccfe56374b650e3006700c67b299853e87a5  tengine-2.0.3.tar.gz
 1f7364ef532a9587aab72be2225a535519ddd936ae6fbb9953994076266c90ee2de6b3b8f187f41032a695a1a91fc2c4736b17a63c0c970a5dabc4d206000194  musl-crypt-fix.patch
-b5904d6a9db2c764ebdb10e53021c2b9596812b9ab4d2732d5fb45741c55f1b3b80418b82f4aa49765875d2a1c4ebf77dc3bdc7416ce1bcb444de8812101a30b  initd
+dbed94779921db87cafa13171ee041c1d292b5e5123ca6f5c98d600e20a0459ce1af82b6f2698c7bf3d7391b312014f3759fec7ef401c7909032da17586b4a9e  initd
 034a1aed91fe2211261de620c9a1460ee58280c25aa90e2536a34205ccd373275efebeba9080502daca7524be218ce08760f4a827e989a98651726dd0835e311  logrotate"
