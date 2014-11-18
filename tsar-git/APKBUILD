@@ -1,0 +1,52 @@
+# Maintainer: Allen Zhong <moeallenz@gmail.com>
+# Contributor: Felix Yan <felixonmars@gmail.com>
+
+pkgname=tsar-git
+_gitname=tsar-master
+pkgver=0.141.b828d9d6
+pkgrel=1
+pkgdesc="Taobao System Activity Reporter"
+arch="all"
+url="http://tsar.taobao.org/"
+license='Apache'
+depends=""
+backup='etc/tsar/tsar.conf'
+source="https://github.com/alibaba/tsar/archive/master.zip
+	fix_module_path.patch
+	fix_apache_log.patch"
+
+pkgver() {
+  cd "$srcdir/$_gitname"
+  echo "0.$(git rev-list --count HEAD).$(git describe --always)"
+}
+
+build() {
+  cd "$srcdir/${_gitname}"
+  patch -Np1 -i "$srcdir"/fix_module_path.patch
+  patch -Np1 -i "$srcdir"/fix_apache_log.patch
+  make  # --prefix=/usr Not supported, WTF
+}
+
+package() {
+  cd "$srcdir/${_gitname}"
+
+  install -d "$pkgdir"/usr/lib/tsar/modules
+  cp modules/*.so "$pkgdir"/usr/lib/tsar/modules/
+  
+  install -Dm755 src/tsar "$pkgdir"/usr/bin/tsar
+
+  install -Dm644 conf/tsar.conf "$pkgdir"/etc/tsar/tsar.conf
+  install -Dm644 conf/tsar.logrotate "$pkgdir"/etc/logrotate.d/tsar
+  install -Dm644 conf/tsar.cron "$pkgdir"/etc/crontabs/tsar
+
+  install -Dm644 conf/tsar.8 "$pkgdir"/usr/share/man/man8/tsar.8
+}
+md5sums="f36fd54b183f6ebf30090884b7700ae1  master.zip
+2ddf971bbdaac82fdfbe1610a420a940  fix_module_path.patch
+7584f7e972be827c4edce5b4f899857a  fix_apache_log.patch"
+sha256sums="4b9bdfa3f0500aa4d0724d47adfa17381519d31ed94ec1b42af17cda8ebcdcf4  master.zip
+9f07d47736797c61d1dffcc577635dd822148508e97ddb3df725634ada63907e  fix_module_path.patch
+d4b55d84d9ceff886388db4a79e2a2f078da3ef3afdbe4fb79aeb461302eed0f  fix_apache_log.patch"
+sha512sums="b0cdfce5e8d2e5bbcc3cd3372ea7ba411b60c05200fef2325cbcfc02b09ff66c6a207a8333ae5b84687541aaa467f06cc31769eb8dcf75013494c3a03a61eb48  master.zip
+dba2248cb913812cdcca060ca4da2c8790dfd7d7da27a6682a3df50861ed227567352f537311177dc85bd22591555e624e025d0304c3c149d907588691267de5  fix_module_path.patch
+e376a116249d97146917e8699043243fbcbd4d44196996eb3fd553d9abd83d5d9c3c01d1abcc9f5f7c9ebd5a249b4ee38b1a27d14649995c56ffdd535f9d56dd  fix_apache_log.patch"
