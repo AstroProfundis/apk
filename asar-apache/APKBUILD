@@ -1,0 +1,33 @@
+# Maintainer: Allen Zhong <moeallenz@gmail.com>
+pkgname=asar-apache
+pkgver=r40
+pkgrel=2
+pkgdesc="A System Activity Reporter of apache httpd"
+url="http://code.google.com/p/python-asar/"
+arch="all"
+license="GPL2"
+depends='apache2'
+source="http://python-asar.googlecode.com/svn-history/$pkgver/trunk/asar-apache-agent/asar_apache_agent.c
+	http://python-asar.googlecode.com/svn-history/$pkgver/trunk/asar-apache-agent/asar_apache_gather.c"
+
+build() {
+  cd "$srcdir"
+
+  sed -i 's/\/tmp/\/var\/log\/apache2/g' *.c
+  gcc -o asar_apache_agent asar_apache_agent.c
+  gcc -o asar_apache_gather asar_apache_gather.c
+}
+
+package() {
+  cd "$srcdir"
+  install -d "$pkgdir"/usr/sbin
+  install -Dm755 asar_apache_agent "$pkgdir"/usr/sbin/
+  install -Dm755 asar_apache_gather "$pkgdir"/usr/sbin/
+}
+
+md5sums="ae8af0c209828408496c8a09adf51102  asar_apache_agent.c
+5fdf7a14172fb6ed70c707231e57c359  asar_apache_gather.c"
+sha256sums="0a22815493020134745a088616061467b38ff4a20c3762358692dd511f5f33fc  asar_apache_agent.c
+2341efb13de8f497bab85c6b43fd2d1fe1b88092bbe392fff768e891c32309cc  asar_apache_gather.c"
+sha512sums="38fb05a7510335f2110033a9655fe2bf9f5d3a20e75792a3978ff60bb7da8e67882c020c03ea1b7f98a485e8b7b2b823c98fabd9725d8affd6f73566431b5040  asar_apache_agent.c
+3b046a9e11a105ecd6ae6d1ee9f51af4deb4bb28cf1c3530e628db24c3e47d432fe6422bf0ffe554911b283d2e5930d1756db4877fa78e5b4b1e68642b7413db  asar_apache_gather.c"
