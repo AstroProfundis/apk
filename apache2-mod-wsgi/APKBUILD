@@ -1,0 +1,43 @@
+# Contributor: Matt Smith <mcs@darkregion.net>
+# Maintainer: Matt Smith <mcs@darkregion.net>
+pkgname=apache2-mod-wsgi
+_realname=mod_wsgi
+pkgver=3.5
+pkgrel=1
+pkgdesc="Python WSGI Module for Apache2"
+url="http://code.google.com/p/modwsgi/"
+arch="all"
+license="ASL 2.0"
+depends="apache2 python"
+depends_dev=
+makedepends="$depends_dev apache2-dev python-dev"
+install="$pkgname.post-install"
+source="$_realname-$pkgver.tar.gz::https://github.com/GrahamDumpleton/mod_wsgi/archive/$pkgver.tar.gz
+	$pkgname.apache2.conf
+	"
+
+_builddir="$srcdir"/$_realname-$pkgver
+build() {
+	cd "$_builddir"
+	CFLAGS="" CXXFLAGS="" CPPFLAGS="" \
+	./configure --prefix=/usr \
+		--with-apxs=/usr/sbin/apxs \
+		--with-python=/usr/bin/python || return 1
+	make || return 1
+}
+
+package() {
+	cd "$_builddir"
+	make DESTDIR="$pkgdir" install || return 1
+
+	# install the apache2 config
+	install -Dm644 "$srcdir"/$pkgname.apache2.conf \
+		"$pkgdir"/etc/apache2/conf.d/wsgi-module.conf || return 1
+}
+
+md5sums="ed08ce86cf34a60441b708db05da970f  mod_wsgi-3.5.tar.gz
+e1795e051e7aae1f865fde0d3b86a507  apache2-mod-wsgi.apache2.conf"
+sha256sums="f0674c38f0f568ece55610bcc6a775c179835c4cba23aa7f876d2a2a8520bf93  mod_wsgi-3.5.tar.gz
+8196a509f90fa10b9464d1c58f4a13d558259e863ccc2761ee1e2c2fcd323f45  apache2-mod-wsgi.apache2.conf"
+sha512sums="27002e933883c96bc06877f2f83a8bef816d1f7080ff01c89cc9f20dd1049f53b21a028cb156159f2a4c374048f5e52dce48b52d5b9584fbd0ca9455c285136b  mod_wsgi-3.5.tar.gz
+5b36a458bd3539e58ea61ec405c4f5c5e0001a644263b0e1f8421a5c7fc7884b6df1355674a9d9b610780b5e9db6ce66d0ae1bbc0e512ecb027c3757209152c8  apache2-mod-wsgi.apache2.conf"
