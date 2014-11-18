@@ -94,10 +94,12 @@ package() {
 
     install -d "$pkgdir"/var/lib/tengine
     install -dm700 "$pkgdir"/var/lib/tengine/proxy
-    install -d "$pkgdir"/var/www
 
+    install -d "$pkgdir"/var/www/tengine
+    chown tengine:www-data "$pkgdir"/var/www/tengine
+
+    chown tengine:www-data /var/log/tengine
     chmod 750 "$pkgdir"/var/log/tengine
-    chown http:log "$pkgdir"/var/log/tengine
 
     install -D -m755 "$srcdir"/initd "$pkgdir"/etc/init.d/tengine
     install -Dm644 "$srcdir"/logrotate "$pkgdir"/etc/logrotate.d/tengine

@@ -2,7 +2,7 @@
 
 addgroup -g 82 -S www-data 2>/dev/null
 addgroup -S tengine 2>/dev/null
-adduser -S -G tengine -H -h /var/www -s /sbin/nologin \
+adduser -S -G tengine -H -h /var/www/tengine -s /sbin/nologin \
 	-D tengine 2>/dev/null
 addgroup tengine www-data 2>/dev/null
 
