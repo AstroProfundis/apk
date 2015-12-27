@@ -1,12 +1,15 @@
 # Maintainer: Allen Zhong <moeallenz@gmail.com>
+# Contributor: Cameron Banta <cbanta@gmail.com>
+# Contributor: Jeff Bilyk <jbilyk@gmail.com>
 # Contributor: Bartłomiej Piotrowski <bpiotrowski@archlinux.org>
+# Contributor: Dennis Przytarski <dennis@przytarski.com>
 # Contributor: Sébastien Luttringer
 # Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
 # Contributor: Miroslaw Szot <mss@czlug.icis.pcz.pl>
 
 pkgname=tengine
 pkgver=2.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A web server based on Nginx and has many advanced features, originated by Taobao. Some extra modules enabled.'
 arch="x86 x86_64"
 url="http://tengine.taobao.org"
