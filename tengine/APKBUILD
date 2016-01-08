@@ -5,7 +5,7 @@
 # Contributor: Miroslaw Szot <mss@czlug.icis.pcz.pl>
 
 pkgname=tengine
-pkgver=2.1.1
+pkgver=2.1.2
 pkgrel=1
 pkgdesc='A web server based on Nginx and has many advanced features, originated by Taobao. Some extra modules enabled.'
 arch="x86 x86_64"
@@ -71,6 +71,7 @@ build() {
       --with-http_secure_link_module=shared \
       --with-http_spdy_module \
       --with-http_ssl_module \
+      --with-http_v2_module \
       --with-http_stub_status_module \
       --with-http_addition_module \
       --with-http_degradation_module \
@@ -78,6 +79,7 @@ build() {
       --with-http_mp4_module=shared\
       --with-http_sub_module=shared \
       --with-http_sysguard_module=shared \
+      --with-http_reqstat_module=shared \
       || return 1
 
     make || return 1
@@ -108,15 +110,15 @@ package() {
     gzip -9c man/nginx.8 > "$pkgdir"/usr/share/man/man8/nginx.8.gz
 }
 
-md5sums="357ec313735bce0b75fedd4662f6208c  tengine-2.1.1.tar.gz
+md5sums="7f898a0dbb5162ff1eb19aeb9d53bec3  tengine-2.1.2.tar.gz
 923b8190b3925e4114f398309458fba0  musl-crypt-fix.patch
 d708eaa96079867410e49d511713061c  initd
 c0af43d7074668444f0e50d88a8d12dd  logrotate"
-sha256sums="7729d3a51a5f267c6d39bec957d242b626b798ce0546f207bd0f1a8df86ed570  tengine-2.1.1.tar.gz
+sha256sums="b64b98ac325a92573506a67aad5d2c4708a4d7b6427c6236a6a3b079aa077318  tengine-2.1.2.tar.gz
 72d9024f698d7a2ff189525b01499b1db201a34907e2c7f081b307c8f13b328a  musl-crypt-fix.patch
 45594f1b0b4b77d75622434e8b0af783bb4ddbb644d2ab3b6f6bbd298ffe89d8  initd
 86ce42f0f3df14421a0e30c80c9cd2750207757b605af2e6501f62fa83f91ad9  logrotate"
-sha512sums="c8c402fd788b887f1f13d8c1566c4bc5686e00eea3e6fe3fa82af65c1dae609f0327f1c9fd4a2fdbeb8c8faf4f9e6d391548c2ed7effa8f072e7e76d503c95d6  tengine-2.1.1.tar.gz
+sha512sums="1b863670975b2537c500e3514ab665c443460cc107cd387466449c614a01abfcca143ffbf5a5316df33e808cae07083cdb8f4229587f8b5fdfa1c72d815e9f04  tengine-2.1.2.tar.gz
 1f7364ef532a9587aab72be2225a535519ddd936ae6fbb9953994076266c90ee2de6b3b8f187f41032a695a1a91fc2c4736b17a63c0c970a5dabc4d206000194  musl-crypt-fix.patch
 dbed94779921db87cafa13171ee041c1d292b5e5123ca6f5c98d600e20a0459ce1af82b6f2698c7bf3d7391b312014f3759fec7ef401c7909032da17586b4a9e  initd
 2d9fc44154b7aaa576003809cdecc8ffc728e2e72d05f4a9e91cee73a69114ec86aeef0c10ed7b43e8f2d10443ef3ecb48992be9cec63b0874a8de47c74741b0  logrotate"
