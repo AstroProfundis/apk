@@ -4,7 +4,7 @@
 pkgname=tsar-git
 _gitname=tsar-master
 pkgver=0.241.297a2dbe
-pkgrel=1
+pkgrel=2
 pkgdesc="Taobao System Activity Reporter"
 arch="all"
 url="http://tsar.taobao.org/"
@@ -24,6 +24,7 @@ build() {
   cd "$srcdir/${_gitname}"
   patch -Np1 -i "$srcdir"/fix_module_path.patch
   patch -Np1 -i "$srcdir"/fix_apache_log.patch
+  sed -i 's/\ root//d' "$srcdir/${_gitname}"/conf/tsar.cron
   make  # --prefix=/usr Not supported, WTF
 }
 
