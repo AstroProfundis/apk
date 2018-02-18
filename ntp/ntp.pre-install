@@ -1,0 +1,6 @@
+#!/bin/sh
+
+getent group ntp &>/dev/null || addgroup -g 87 ntp >/dev/null
+getent passwd ntp &>/dev/null || adduser -u 87 -G ntp -h /var/lib/ntp -s /bin/false -D ntp >/dev/null
+
+exit 0

@@ -7,7 +7,7 @@ pkgname=ntp
 _pkgname=ntp #-dev
 _pkgver=4.2.8p10
 pkgver=${_pkgver/p/.p}
-pkgrel=1
+pkgrel=2
 pkgdesc='Network Time Protocol reference implementation'
 url='http://www.ntp.org/'
 license="custom"
@@ -20,9 +20,8 @@ source="https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/${_pkgname}-${_pk
         ntp.conf
         ntpd
         ntp-client"
-
-options="!emptydirs"
-install="ntp.post-install ntp.post-upgrade"
+options="!check"
+install="ntp.pre-install ntp.post-upgrade"
 subpackages="$pkgname-doc"
 
 prepare() {
@@ -52,7 +51,7 @@ package() {
 	install -Dm755 ../ntp-client "${pkgdir}"/etc/init.d/ntp-client
 	install -Dm644 COPYRIGHT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
-	install -d "${pkgdir}"/var/lib/ntp
+	install -d -o 87 "${pkgdir}"/var/lib/ntp
 	echo > "${pkgdir}/var/lib/ntp/.placeholder"
 }
 sha512sums="67e01ab533c3dfabb0bdd3ced848bdd239980bde28fdb2791d167b7e9690ab3b3759e1bd99e9fddcce03ddef4cd63a47eb85941bb127ceb79b7ecff22cce9c05  ntp-4.2.8p10.tar.gz
