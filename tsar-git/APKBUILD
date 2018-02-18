@@ -3,8 +3,8 @@
 
 pkgname=tsar-git
 _gitname=tsar-master
-pkgver=0.241
-pkgrel=3
+pkgver=0.390
+pkgrel=1
 pkgdesc="Taobao System Activity Reporter"
 arch="all"
 url="http://tsar.taobao.org/"
@@ -43,12 +43,6 @@ package() {
   install -d "$pkgdir"/usr/share/man/man8
   gzip -9c conf/tsar.8 > "$pkgdir"/usr/share/man/man8/tsar.8.gz
 }
-md5sums="0760df666735991cf4cee82b21f220f8  master.zip
-2ddf971bbdaac82fdfbe1610a420a940  fix_module_path.patch
-7584f7e972be827c4edce5b4f899857a  fix_apache_log.patch"
-sha256sums="ce64ae4c82f503995d92a0a7f156dc6219758bfe0ba125afb8ec6d7ee54ad0a8  master.zip
-9f07d47736797c61d1dffcc577635dd822148508e97ddb3df725634ada63907e  fix_module_path.patch
-d4b55d84d9ceff886388db4a79e2a2f078da3ef3afdbe4fb79aeb461302eed0f  fix_apache_log.patch"
-sha512sums="036566267410e7dbdb6ecd1f8fd10099827677e8876763d9a1bd0be408baeedbbe5d2c6943cfb176f72353307c25798c0ee8a7b41531001f87ea0a0390b88b8a  master.zip
+sha512sums="63577bde010a3f219270c13120b894edcac631041a657c3ed5f88ab2f91a6c64ee1a59211dc59964ccd62f8574241c8d5ae863e8394041e84538041ba1cd4ff3  master.zip
 dba2248cb913812cdcca060ca4da2c8790dfd7d7da27a6682a3df50861ed227567352f537311177dc85bd22591555e624e025d0304c3c149d907588691267de5  fix_module_path.patch
 e376a116249d97146917e8699043243fbcbd4d44196996eb3fd553d9abd83d5d9c3c01d1abcc9f5f7c9ebd5a249b4ee38b1a27d14649995c56ffdd535f9d56dd  fix_apache_log.patch"
