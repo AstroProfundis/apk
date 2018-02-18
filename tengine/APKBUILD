@@ -9,7 +9,7 @@
 
 pkgname=tengine
 pkgver=2.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc='A web server based on Nginx and has many advanced features, originated by Taobao. Some extra modules enabled.'
 arch="x86 x86_64"
 url="http://tengine.taobao.org"
@@ -113,4 +113,4 @@ package() {
 
 sha512sums="aac9a46a95f254f2ef393d6f5f8c4b8b37cacd17ac0c0f31dfd1f0df7beeca127d8615df14e45687fd985cefe6e63cc330326160afa3540e18364d4ace74dacc  tengine-2.2.2.tar.gz
 dbed94779921db87cafa13171ee041c1d292b5e5123ca6f5c98d600e20a0459ce1af82b6f2698c7bf3d7391b312014f3759fec7ef401c7909032da17586b4a9e  initd
-2d9fc44154b7aaa576003809cdecc8ffc728e2e72d05f4a9e91cee73a69114ec86aeef0c10ed7b43e8f2d10443ef3ecb48992be9cec63b0874a8de47c74741b0  logrotate"
+348c58fa42a18bb3bcfe2f591598e28135f919738f9b85a0026babc41d6eb3b2750ee75557ec7649a15157e37991d6b2d256fa23216834eab178a52c6304d877  logrotate"
