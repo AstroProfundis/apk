@@ -9,13 +9,13 @@
 
 pkgname=tengine
 pkgver=2.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A web server based on Nginx and has many advanced features, originated by Taobao. Some extra modules enabled.'
 arch="x86 x86_64"
 url="http://tengine.taobao.org"
 license="Custom"
-depends="pcre zlib openssl geoip"
-makedepends="geoip-dev pcre-dev openssl-dev zlib-dev"
+depends="pcre zlib geoip"
+makedepends="geoip-dev pcre-dev libressl-dev zlib-dev"
 install="$pkgname.pre-install $pkgname.pre-upgrade"
 backup="etc/tengine/fastcgi.conf
         etc/tengine/fastcgi_params
