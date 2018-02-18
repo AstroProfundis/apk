@@ -1,0 +1,64 @@
+# Maintainer: Allen Zhong <moeallenz@gmail.com>
+# Contributor: Lukas Fleischer <lfleischer@archlinux.org>
+# Contributor: Gaetan Bisson <bisson@archlinux.org>
+# Contributor: kevin <kevin@archlinux.org>
+
+pkgname=ntp
+_pkgname=ntp #-dev
+_pkgver=4.2.8p6
+pkgver=${_pkgver/p/.p}
+pkgrel=1
+pkgdesc='Network Time Protocol reference implementation'
+url='http://www.ntp.org/'
+license="custom"
+arch="i686 x86_64"
+depends="openssl libcap libedit"
+makedepends="libcap-dev libedit-dev openssl-dev"
+backup="etc/ntp.conf"
+source="https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/${_pkgname}-${_pkgver}.tar.gz
+        ntp.conf
+        ntpd
+        ntp-client"
+
+options="!emptydirs"
+install="ntp.post-install ntp.post-upgrade"
+subpackages="$pkgname-doc"
+
+build() {
+	cd "${srcdir}/${_pkgname}-${_pkgver}"
+
+	./configure \
+		--prefix=/usr \
+		--libexecdir=/usr/lib \
+		--enable-linuxcaps \
+		--enable-ntp-signd \
+		|| return 1
+
+	make || return 1
+}
+
+package() {
+	cd "${srcdir}/${_pkgname}-${_pkgver}"
+
+	make DESTDIR="${pkgdir}" install
+
+	install -Dm644 ../ntp.conf "${pkgdir}"/etc/ntp.conf
+	install -Dm755 ../ntpd "${pkgdir}"/etc/init.d/ntp
+	install -Dm755 ../ntp-client "${pkgdir}"/etc/init.d/ntp-client
+	install -Dm644 COPYRIGHT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+	install -d -o 87 "${pkgdir}"/var/lib/ntp
+	echo > "${pkgdir}/var/lib/ntp/.placeholder"
+}
+md5sums="60049f51e9c8305afe30eb22b711c5c6  ntp-4.2.8p6.tar.gz
+b6d846940253ce66b58339dffc436a4c  ntp.conf
+becfe6eb83ac9db9a566c84fdc2d4a56  ntpd
+5e8f99a78b830bfeb81fe91fd4c1601a  ntp-client"
+sha256sums="583d0e1c573ace30a9c6afbea0fc52cae9c8c916dbc15c026e485a0dda4ba048  ntp-4.2.8p6.tar.gz
+3c76913b87a4ea19da2a6288d583da3133fcd6937695439c17f337d060d5db9f  ntp.conf
+ba181563ac1c6c8164abb7ade71a2a7646ea0321c75e35cb9204b41eedb1e5e6  ntpd
+d2cd6154b3801aaf240a7d079a186ab8eb1843a6eeb9807b972f72556ebf4822  ntp-client"
+sha512sums="797d07980c0b71453f32ae821ef496add0fe712a2bf960ab1af18f0b54caa6029d65238ef7606d1ffb53e2e95c88623b4fb228399b5d4dde9a5fa1b7e256f71b  ntp-4.2.8p6.tar.gz
+d9ca854cbb21b5977920cc5d3f45ca76e6e663fa57f96cd35101387834b2682931107ee46ed8dc5654c967f334cdbe04a654e409a59807ae37dae8f899fddf4d  ntp.conf
+81476d6a5261822b5bdffe8f1d8ca7627022c65482491dfd057b2529fd3c361746fb5616d5eb1ae193405a66db3d1fa260d1403d8c77319682efaaf2b0d8146e  ntpd
+1f7ebee021cf15af0fd0569b4ae502b481cdb5d8edd51e7342fbb32855564b723bf6acc9ae36703fe0be9f008f54a89197e72f1ebe96637c98b043771279c463  ntp-client"
