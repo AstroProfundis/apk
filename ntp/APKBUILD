@@ -5,9 +5,9 @@
 
 pkgname=ntp
 _pkgname=ntp #-dev
-_pkgver=4.2.8p10
+_pkgver=4.2.8p12
 pkgver=${_pkgver/p/.p}
-pkgrel=2
+pkgrel=1
 pkgdesc='Network Time Protocol reference implementation'
 url='http://www.ntp.org/'
 license="custom"
@@ -16,7 +16,6 @@ depends="libressl libcap libedit"
 makedepends="libcap-dev libedit-dev libressl-dev"
 backup="etc/ntp.conf"
 source="https://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-4.2/${_pkgname}-${_pkgver}.tar.gz
-	libressl-support.patch::http://bugs.ntp.org/attachment.cgi?id=1525
         ntp.conf
         ntpd
         ntp-client"
@@ -26,7 +25,6 @@ subpackages="$pkgname-doc"
 
 prepare() {
 	cd "${srcdir}/${_pkgname}-${_pkgver}"
-	patch -Np1 -i ../libressl-support.patch
 }
 
 build() {
@@ -54,8 +52,7 @@ package() {
 	install -d -o 87 "${pkgdir}"/var/lib/ntp
 	echo > "${pkgdir}/var/lib/ntp/.placeholder"
 }
-sha512sums="67e01ab533c3dfabb0bdd3ced848bdd239980bde28fdb2791d167b7e9690ab3b3759e1bd99e9fddcce03ddef4cd63a47eb85941bb127ceb79b7ecff22cce9c05  ntp-4.2.8p10.tar.gz
-ab8b42a3a819a922867af92bd2fa29e5776a816b90b6ea4ca69c53132b8b7bbaf6557f382267b5580572591f3c7d9a557db2ab80162b239b4dc52682e3f39c9d  libressl-support.patch
+sha512sums="5382dcd1bb7feca8f28fc650f68892cb53f9364ebeb3780754cfbe71b1602057fdfd6eb27956afe79014a435624d77e2648d9e07f4d86ce7a98f5a4438d08310  ntp-4.2.8p12.tar.gz
 d9ca854cbb21b5977920cc5d3f45ca76e6e663fa57f96cd35101387834b2682931107ee46ed8dc5654c967f334cdbe04a654e409a59807ae37dae8f899fddf4d  ntp.conf
 81476d6a5261822b5bdffe8f1d8ca7627022c65482491dfd057b2529fd3c361746fb5616d5eb1ae193405a66db3d1fa260d1403d8c77319682efaaf2b0d8146e  ntpd
 1f7ebee021cf15af0fd0569b4ae502b481cdb5d8edd51e7342fbb32855564b723bf6acc9ae36703fe0be9f008f54a89197e72f1ebe96637c98b043771279c463  ntp-client"
